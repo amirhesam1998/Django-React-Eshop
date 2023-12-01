@@ -1,7 +1,14 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import products from "../products";
-import { Button, Col, Image, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Image,
+  ListGroup,
+  ListGroupItem,
+  Row,
+} from "react-bootstrap";
 import Rating from "../components/Rating";
 
 function ProductScreen() {
@@ -42,20 +49,28 @@ function ProductScreen() {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-            <Row>
+              <Row>
                 <Col>status;</Col>
-                <Col>{product.countInStock > 0 ? "in stock" : "out fo stock"}</Col>
+                <Col>
+                  {product.countInStock > 0 ? "in stock" : "out fo stock"}
+                </Col>
               </Row>
             </ListGroup.Item>
             <ListGroupItem>
-              <Button type = "button" className="btn-block" disabled = {product.countInStock === 0}>add to card </Button>
+              <Button
+                type="button"
+                className="btn-block"
+                disabled={product.countInStock === 0}
+              >
+                add to card{" "}
+              </Button>
             </ListGroupItem>
           </ListGroup>
         </Col>
       </Row>
       <Row>
         <Col>
-        <strong>Description:</strong> {product.description}
+          <strong>Description:</strong> {product.description}
         </Col>
       </Row>
     </div>
