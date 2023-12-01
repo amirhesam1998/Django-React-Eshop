@@ -11,7 +11,7 @@ function HomeScreen() {
     async function fetchProducts() {
       try {
         const { data } = await axios.get(
-          "http://127.0.0.1:8000/api/v1/products/"
+          "/api/v1/products/"
         );
         setProducts(data);
       } catch (error) {

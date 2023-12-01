@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import products from "../products";
+import axios from "axios";
 import {
   Button,
   Col,
@@ -12,8 +12,21 @@ import {
 import Rating from "../components/Rating";
 
 function ProductScreen() {
-  const { id } = useParams();
-  const product = products.find((p) => p._id === id);
+  const { id } = useParams(); // Extract the 'id' from the URL
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const { data } = await axios.get(`/api/v1/products/${id}`);
+        setProduct(data);
+      } catch (error) {
+        // Handle error if needed
+        console.error("Error fetching product:", error);
+      }
+    }
+    fetchProduct();
+  }, [id]);
 
   return (
     <div>

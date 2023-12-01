@@ -8,7 +8,7 @@ products = [
         'brand': 'ASUS',
         'category': 'Electronics',
         'price': 946.99,
-        'countInStock': 0,
+        'countInStock': 10,
         'rating': 4.5,
         'numReviews': 91,
     },
@@ -74,7 +74,7 @@ products = [
         'category': 'Electronics',
         'price': 59.99,
         'countInStock': 0,
-        'rating': 4.3,
+        'rating': 3.3,
         'numReviews': 4040,
     },
 ]
