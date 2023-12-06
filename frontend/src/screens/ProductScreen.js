@@ -1,93 +1,85 @@
-import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
-import {
-  Button,
-  Col,
-  Image,
-  ListGroup,
-  ListGroupItem,
-  Row,
-} from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Col, Image, ListGroup, Row } from "react-bootstrap";
 import Rating from "../components/Rating";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductDetails } from "../actions/productActions";
+import Loader from "../components/Loaders";
+import Message from "../components/Message";
 
-function ProductScreen() {
-  const { id } = useParams(); // Extract the 'id' from the URL
-  const [product, setProduct] = useState({});
+function ProductScreen({ match }) {
+  const dispatch = useDispatch();
+  const productDetails = useSelector((state) => state.productDetails);
+  const { error, loading, product } = productDetails;
+  // const { id } = useParams(); // Extract the 'id' from the URL
 
   useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const { data } = await axios.get(`/api/v1/products/${id}`);
-        setProduct(data);
-      } catch (error) {
-        // Handle error if needed
-        console.error("Error fetching product:", error);
-      }
-    }
-    fetchProduct();
-  }, [id]);
+    dispatch(fetchProductDetails(match.params.id));
+  }, [dispatch, match]);
 
   return (
     <div>
-      <Link to="/" className="btn btn-dark my-3">
-        go back
+      <Link to="/" className="btn btn-light my-3">
+        Go Back
       </Link>
-      <Row>
-        <Col sm={12} md={6} lg={6} xl={6}>
-          <Image src={product.image} alt={product.name} />
-        </Col>
 
-        <Col sm={12} md={3} lg={3} xl={3}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <h5>{product.name}</h5>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Rating
-                value={product.rating}
-                text={`${product.numReviews} reviews`}
-                color={"#F8E825"}
-              />
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger" text={error} />
+      ) :(
+        <Row>
+          <Col sm={12} md={5} lg={5} xl={5}>
+            <Image src={product.image} alt={product.name} />
+          </Col>
+          <Col sm={12} md={7} lg={7} xl={7}>
+            <Row>
+              <Col sm={12} md={6} lg={6} xl={6} className="my-3">
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    <h5>{product.name}</h5>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Rating
+                      value={product.rating}
+                      text={`${product.numReviews} reviews`}
+                      color={"#F8E825"}
+                    />
+                  </ListGroup.Item>
+                </ListGroup>
+              </Col>
 
-        <Col sm={12} md={3} lg={3} xl={3}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <Row>
-                <Col>price;</Col>
-                <Col>${product.price}</Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Col>status;</Col>
-                <Col>
-                  {product.countInStock > 0 ? "in stock" : "out fo stock"}
-                </Col>
-              </Row>
-            </ListGroup.Item>
-            <ListGroupItem>
-              <Button
-                type="button"
-                className="btn-block"
-                disabled={product.countInStock === 0}
-              >
-                add to card{" "}
-              </Button>
-            </ListGroupItem>
-          </ListGroup>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <strong>Description:</strong> {product.description}
-        </Col>
-      </Row>
+              <Col sm={12} md={6} lg={6} xl={6} className="mb-3">
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Price:</Col>
+                      <Col>${product.price}</Col>
+                    </Row>
+                  </ListGroup.Item>
+
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Status:</Col>
+                      <Col>
+                        {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="my-3">
+                <strong>Description:</strong> {product.description}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 }
-
+  
 export default ProductScreen;
